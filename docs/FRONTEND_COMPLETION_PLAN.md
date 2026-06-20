@@ -22,6 +22,8 @@ The current stage is API layer separation and UI completion. Existing backend an
 - Use consistent loading, retry, and error states.
 - Keep API communication inside reusable service classes.
 
+Status: in progress. `ApiClient`, `TokenStorage`, and first typed response models are now present.
+
 ## Stage 2 - Core flow
 
 - Login screen.
@@ -33,6 +35,8 @@ The current stage is API layer separation and UI completion. Existing backend an
 - Receive payment.
 - Approval confirmation when credit limit is exceeded.
 
+Status: first compact implementation exists in `lib/main.dart`; next step is connecting typed models and cleaner service files.
+
 ## Stage 3 - Financial protection UX
 
 - Show current balance prominently.
@@ -42,6 +46,8 @@ The current stage is API layer separation and UI completion. Existing backend an
 - Show receipt number after payment.
 - Prevent double submission with loading states.
 
+Status: partially implemented in the customer profile screen; next step is better warnings and receipt display.
+
 ## Stage 4 - Reports and control
 
 - Dashboard summary.
@@ -50,6 +56,8 @@ The current stage is API layer separation and UI completion. Existing backend an
 - Data quality scan page.
 - Settings and logout.
 
+Status: dashboard, daily report and settings exist; receipt detail and stronger data quality UI still need completion.
+
 ## Stage 5 - Production readiness
 
 - Split the compact implementation into feature folders.
@@ -57,6 +65,15 @@ The current stage is API layer separation and UI completion. Existing backend an
 - Add tests.
 - Prepare web build configuration.
 - Confirm deployment on Netlify or Cloudflare.
+
+Status: typed response models started.
+
+## Typed models added
+
+- `lib/models/customer_model.dart`
+- `lib/models/dashboard_summary_model.dart`
+- `lib/models/financial_event_model.dart`
+- `lib/models/daily_report_model.dart`
 
 ## Acceptance checklist
 
