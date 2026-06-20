@@ -1,4 +1,5 @@
 import '../core/network/api_client.dart';
+import '../core/utils/response_reader.dart';
 
 class QualityServiceApi {
   QualityServiceApi({required this.client, required this.baseUrl});
@@ -8,6 +9,6 @@ class QualityServiceApi {
 
   Future<Map<String, dynamic>> runCheck() async {
     final data = await client.get(baseUrl, '/scan');
-    return Map<String, dynamic>.from(data as Map);
+    return ResponseReader.mapFrom(data);
   }
 }
