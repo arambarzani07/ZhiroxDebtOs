@@ -14,12 +14,20 @@ class CustomerModel {
   final String status;
 
   factory CustomerModel.fromJson(Map<String, dynamic> json) {
+    String readText(List<String> keys, {String fallback = ''}) {
+      for (final key in keys) {
+        final value = '${json[key] ?? ''}'.trim();
+        if (value.isNotEmpty) return value;
+      }
+      return fallback;
+    }
+
     return CustomerModel(
       id: int.tryParse('${json['id']}') ?? 0,
-      fullName: '${json['full_name'] ?? ''}',
-      phone: '${json['phone'] ?? ''}',
-      address: '${json['address'] ?? ''}',
-      status: '${json['status'] ?? 'active'}',
+      fullName: readText(['full_name', 'name', 'customer_name']),
+      phone: readText(['phone', 'mobile', 'phone_number']),
+      address: readText(['address', 'location']),
+      status: readText(['status'], fallback: 'active'),
     );
   }
 }
@@ -44,15 +52,30 @@ class CustomerProfileModel {
   final String debtHealth;
 
   factory CustomerProfileModel.fromJson(Map<String, dynamic> json) {
-    num readNum(String key) => num.tryParse('${json[key] ?? 0}') ?? 0;
+    num readNum(List<String> keys) {
+      for (final key in keys) {
+        final value = num.tryParse('${json[key] ?? ''}');
+        if (value != null) return value;
+      }
+      return 0;
+    }
+
+    String readText(List<String> keys, {String fallback = ''}) {
+      for (final key in keys) {
+        final value = '${json[key] ?? ''}'.trim();
+        if (value.isNotEmpty) return value;
+      }
+      return fallback;
+    }
+
     return CustomerProfileModel(
-      currentBalance: readNum('current_balance'),
-      totalDebtGiven: readNum('total_debt_given'),
-      totalPaymentReceived: readNum('total_payment_received'),
-      creditLimit: readNum('credit_limit'),
-      trustScore: readNum('trust_score'),
-      riskLevel: '${json['risk_level'] ?? 'low'}',
-      debtHealth: '${json['debt_health'] ?? 'healthy'}',
+      currentBalance: readNum(['current_balance', 'balance', 'remaining_balance']),
+      totalDebtGiven: readNum(['total_debt_given', 'debt_given', 'total_debt']),
+      totalPaymentReceived: readNum(['total_payment_received', 'payment_received', 'total_payment']),
+      creditLimit: readNum(['credit_limit', 'limit']),
+      trustScore: readNum(['trust_score', 'trust_points']),
+      riskLevel: readText(['risk_level', 'risk'], fallback: 'low'),
+      debtHealth: readText(['debt_health', 'health'], fallback: 'healthy'),
     );
   }
 }
