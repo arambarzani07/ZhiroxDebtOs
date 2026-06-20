@@ -29,6 +29,7 @@ class ProfileLoader extends StatefulWidget {
 class _ProfileLoaderState extends State<ProfileLoader> {
   late Future<CustomerProfileModel> future;
   bool loading = false;
+  FinancialEventResultModel? lastResult;
 
   @override
   void initState() {
@@ -63,6 +64,7 @@ class _ProfileLoaderState extends State<ProfileLoader> {
           ? await actions.giveDebt(customerId: widget.customer.id, amount: input.amount, note: input.note)
           : await actions.receivePayment(customerId: widget.customer.id, amount: input.amount, note: input.note);
       if (!mounted) return;
+      setState(() => lastResult = result);
       final text = result.needsApproval ? 'پێویستی بە ڕەزامەندی هەیە' : 'کارەکە تۆمار کرا';
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
       reload();
@@ -95,6 +97,7 @@ class _ProfileLoaderState extends State<ProfileLoader> {
             profile: profile,
             onDebt: () => runMoneyAction(debt: true),
             onPayment: () => runMoneyAction(debt: false),
+            lastResult: lastResult,
             loading: loading,
           ),
         );
