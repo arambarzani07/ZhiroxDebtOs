@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/quality_service.dart';
+import '../../widgets/error_view.dart';
 import 'data_quality_screen.dart';
 
 class QualityLoader extends StatefulWidget {
@@ -20,7 +21,9 @@ class _QualityLoaderState extends State<QualityLoader> {
     setState(() => loading = true);
     try {
       final data = await widget.service.runCheck();
-      setState(() => result = data);
+      if (mounted) setState(() => result = data);
+    } catch (error) {
+      if (mounted) showErrorSnack(context, error.toString());
     } finally {
       if (mounted) setState(() => loading = false);
     }
