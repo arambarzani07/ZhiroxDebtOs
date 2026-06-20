@@ -1,4 +1,5 @@
 import '../core/network/api_client.dart';
+import '../core/utils/response_reader.dart';
 import '../models/dashboard_summary_model.dart';
 
 class DashboardServiceApi {
@@ -9,6 +10,10 @@ class DashboardServiceApi {
 
   Future<DashboardSummaryModel> summary() async {
     final data = await client.get(baseUrl, '/summary');
-    return DashboardSummaryModel.fromJson(Map<String, dynamic>.from(data as Map));
+    final map = ResponseReader.mapFrom(data);
+    final payload = ResponseReader.mapFrom(
+      ResponseReader.pick(map, ['summary', 'dashboard', 'data']) ?? map,
+    );
+    return DashboardSummaryModel.fromJson(payload);
   }
 }
