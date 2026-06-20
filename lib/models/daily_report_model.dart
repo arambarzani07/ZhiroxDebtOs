@@ -16,16 +16,26 @@ class DailyReportModel {
   final int receiptsCount;
 
   factory DailyReportModel.fromJson(Map<String, dynamic> json) {
-    final report = json['report'] is Map ? Map<String, dynamic>.from(json['report']) : <String, dynamic>{};
-    num readNum(String key) => num.tryParse('${report[key] ?? 0}') ?? 0;
-    int readInt(String key) => int.tryParse('${report[key] ?? 0}') ?? 0;
+    final report = json['report'] is Map ? Map<String, dynamic>.from(json['report']) : json;
+
+    num readNum(String key, [String? alt]) {
+      final primary = num.tryParse('${report[key] ?? ''}');
+      if (primary != null) return primary;
+      if (alt != null) return num.tryParse('${report[alt] ?? ''}') ?? 0;
+      return 0;
+    }
+
+    int readInt(String key, [String? alt]) {
+      return readNum(key, alt).toInt();
+    }
+
     return DailyReportModel(
-      date: '${json['date'] ?? ''}',
-      totalCurrentBalance: readNum('total_current_balance'),
-      totalDebtGiven: readNum('total_debt_given'),
-      totalPaymentReceived: readNum('total_payment_received'),
-      activeCustomersCount: readInt('active_customers_count'),
-      receiptsCount: readInt('receipts_count'),
+      date: '${json['date'] ?? report['date'] ?? ''}',
+      totalCurrentBalance: readNum('total_current_balance', 'balance'),
+      totalDebtGiven: readNum('total_debt_given', 'total_debt'),
+      totalPaymentReceived: readNum('total_payment_received', 'total_payment'),
+      activeCustomersCount: readInt('active_customers_count', 'active_customers'),
+      receiptsCount: readInt('receipts_count', 'receipt_count'),
     );
   }
 }
