@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/config/api_endpoints.dart';
 import '../features/auth/auth_gate.dart';
 import '../features/auth/login_screen.dart';
+import '../widgets/error_view.dart';
 import 'app_home.dart';
 import 'app_services.dart';
 
@@ -32,6 +33,10 @@ class _AppRootState extends State<AppRoot> {
       }
       await services.storage.saveToken(token);
       if (mounted) setState(() {});
+    } catch (error) {
+      if (mounted) {
+        showErrorSnack(context, error.toString());
+      }
     } finally {
       if (mounted) setState(() => loading = false);
     }
