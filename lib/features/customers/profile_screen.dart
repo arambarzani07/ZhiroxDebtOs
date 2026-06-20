@@ -14,6 +14,8 @@ class ProfileScreen extends StatelessWidget {
     required this.onDebt,
     required this.onPayment,
     this.lastResult,
+    this.onApprove,
+    this.onReject,
     this.loading = false,
   });
 
@@ -22,6 +24,8 @@ class ProfileScreen extends StatelessWidget {
   final VoidCallback onDebt;
   final VoidCallback onPayment;
   final FinancialEventResultModel? lastResult;
+  final VoidCallback? onApprove;
+  final VoidCallback? onReject;
   final bool loading;
 
   @override
@@ -40,7 +44,12 @@ class ProfileScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         if (lastResult != null) ...[
-          FinancialResultPanel(result: lastResult!),
+          FinancialResultPanel(
+            result: lastResult!,
+            onApprove: onApprove,
+            onReject: onReject,
+            loading: loading,
+          ),
           const SizedBox(height: 12),
         ],
         FinancialActionBar(
