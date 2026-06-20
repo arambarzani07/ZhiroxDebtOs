@@ -1,0 +1,15 @@
+name: zhirox_debt_os
+description: Flutter frontend for Zhirox Debt OS.
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: any
+  shared_preferences: any
+
+flutter:
+  uses-material-design: true
