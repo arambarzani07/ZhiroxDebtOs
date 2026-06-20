@@ -22,7 +22,7 @@ The current stage is API layer separation and UI completion. Existing backend an
 - Use consistent loading, retry, and error states.
 - Keep API communication inside reusable service classes.
 
-Status: in progress. `ApiClient`, `TokenStorage`, and first typed response models are now present.
+Status: in progress. `ApiClient`, `TokenStorage`, typed response models, customer service, and dashboard service are now present.
 
 ## Stage 2 - Core flow
 
@@ -35,7 +35,7 @@ Status: in progress. `ApiClient`, `TokenStorage`, and first typed response model
 - Receive payment.
 - Approval confirmation when credit limit is exceeded.
 
-Status: first compact implementation exists in `lib/main.dart`; next step is connecting typed models and cleaner service files.
+Status: first compact implementation exists in `lib/main.dart`; feature screens are being added gradually.
 
 ## Stage 3 - Financial protection UX
 
@@ -46,7 +46,7 @@ Status: first compact implementation exists in `lib/main.dart`; next step is con
 - Show receipt number after payment.
 - Prevent double submission with loading states.
 
-Status: partially implemented in the customer profile screen; next step is better warnings and receipt display.
+Status: reusable financial protection widgets are present. Next step is wiring them into the live customer profile flow.
 
 ## Stage 4 - Reports and control
 
@@ -56,7 +56,7 @@ Status: partially implemented in the customer profile screen; next step is bette
 - Data quality scan page.
 - Settings and logout.
 
-Status: dashboard, daily report and settings exist; receipt detail and stronger data quality UI still need completion.
+Status: dashboard, daily report, data quality, and settings feature screens are present.
 
 ## Stage 5 - Production readiness
 
@@ -66,7 +66,7 @@ Status: dashboard, daily report and settings exist; receipt detail and stronger 
 - Prepare web build configuration.
 - Confirm deployment on Netlify or Cloudflare.
 
-Status: typed response models started.
+Status: typed response models, reusable widgets, feature screens, and first API services are started.
 
 ## Typed models added
 
@@ -74,6 +74,23 @@ Status: typed response models started.
 - `lib/models/dashboard_summary_model.dart`
 - `lib/models/financial_event_model.dart`
 - `lib/models/daily_report_model.dart`
+
+## API services added
+
+- `lib/services/customer_service.dart`
+- `lib/services/dashboard_service.dart`
+
+## Feature screens added
+
+- `lib/features/auth/login_screen.dart`
+- `lib/features/auth/auth_gate.dart`
+- `lib/features/app_shell/app_shell.dart`
+- `lib/features/dashboard/dashboard_screen.dart`
+- `lib/features/customers/customer_list_screen.dart`
+- `lib/features/customers/profile_screen.dart`
+- `lib/features/reports/daily_report_screen.dart`
+- `lib/features/data_quality/data_quality_screen.dart`
+- `lib/features/settings/settings_screen.dart`
 
 ## Acceptance checklist
 
