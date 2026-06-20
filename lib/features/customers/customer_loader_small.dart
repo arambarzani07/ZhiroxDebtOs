@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/customer_model.dart';
 import '../../services/customer_service.dart';
+import '../../widgets/error_view.dart';
 import '../../widgets/loading_page.dart';
 import 'customer_list_screen.dart';
 
@@ -40,6 +41,16 @@ class _CustomerLoaderSmallState extends State<CustomerLoaderSmall> {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Scaffold(body: LoadingPage());
         }
+
+        if (snapshot.hasError) {
+          return Scaffold(
+            body: ErrorView(
+              message: snapshot.error.toString(),
+              onRetry: reload,
+            ),
+          );
+        }
+
         return CustomerListScreen(
           customers: snapshot.data ?? const <CustomerModel>[],
           onRefresh: reload,
