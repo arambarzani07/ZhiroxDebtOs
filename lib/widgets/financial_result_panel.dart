@@ -3,9 +3,18 @@ import 'package:flutter/material.dart';
 import '../models/financial_event_model.dart';
 
 class FinancialResultPanel extends StatelessWidget {
-  const FinancialResultPanel({super.key, required this.result});
+  const FinancialResultPanel({
+    super.key,
+    required this.result,
+    this.onApprove,
+    this.onReject,
+    this.loading = false,
+  });
 
   final FinancialEventResultModel result;
+  final VoidCallback? onApprove;
+  final VoidCallback? onReject;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +40,26 @@ class FinancialResultPanel extends StatelessWidget {
             if (result.approvalRequestId != null) Text('Approval ID: ${result.approvalRequestId}'),
             if (result.receiptId != null) Text('Receipt ID: ${result.receiptId}'),
             if (result.message.isNotEmpty) Text(result.message),
+            if (needsApproval && onApprove != null && onReject != null) ...[
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: loading ? null : onApprove,
+                      child: const Text('ڕەزامەندی'),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: loading ? null : onReject,
+                      child: const Text('ڕەتکردنەوە'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),
