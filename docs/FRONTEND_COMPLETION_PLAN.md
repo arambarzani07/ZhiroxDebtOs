@@ -6,20 +6,23 @@ This document defines the frontend completion track for Zhirox Debt OS based on 
 
 The backend foundation has passed manual testing for authentication, permissions, customer creation, debt, approval, payment, ledger postings, receipts, dashboard summary, daily report, and data quality scan.
 
-## Rule
+## Main branch rule
 
-Do not redesign the database or backend during this frontend stage. The frontend must consume the confirmed API contract and clearly report any API mismatch.
+All frontend changes are applied directly to `main`. No additional branches are used unless the owner explicitly changes this rule.
 
-## Stages
+## Current stage
 
-### 1. API connectivity
+The current stage is API layer separation and UI completion. Existing backend and database logic should not be changed in this stage.
+
+## Stage 1 - API connectivity
 
 - Confirm all API group base URLs.
 - Store the login token locally.
 - Send the token to private endpoints.
 - Use consistent loading, retry, and error states.
+- Keep API communication inside reusable service classes.
 
-### 2. Core flow
+## Stage 2 - Core flow
 
 - Login screen.
 - Dashboard screen.
@@ -30,7 +33,7 @@ Do not redesign the database or backend during this frontend stage. The frontend
 - Receive payment.
 - Approval confirmation when credit limit is exceeded.
 
-### 3. Financial protection UX
+## Stage 3 - Financial protection UX
 
 - Show current balance prominently.
 - Show credit limit.
@@ -39,7 +42,7 @@ Do not redesign the database or backend during this frontend stage. The frontend
 - Show receipt number after payment.
 - Prevent double submission with loading states.
 
-### 4. Reports and control
+## Stage 4 - Reports and control
 
 - Dashboard summary.
 - Daily report.
@@ -47,23 +50,14 @@ Do not redesign the database or backend during this frontend stage. The frontend
 - Data quality scan page.
 - Settings and logout.
 
-### 5. Production readiness
+## Stage 5 - Production readiness
 
-- Split the first compact implementation into feature folders.
-- Add typed models.
+- Split the compact implementation into feature folders.
+- Add typed response models.
 - Add tests.
-- Add web platform files.
-- Add Android and iOS platform files when needed.
-- Prepare web deployment settings.
-
-## Current implementation
-
-The first runnable Flutter foundation is in `lib/main.dart`.
-
-## API configuration
-
-The Auth group base URL is configured in `ApiConfig`. Other API group URLs are derived from the same host and the matching Xano group slug. If any group URL differs, update `ApiConfig`.
+- Prepare web build configuration.
+- Confirm deployment on Netlify or Cloudflare.
 
 ## Acceptance checklist
 
-The frontend stage is accepted when the app can: login, show dashboard totals, list customers, open customer profile, create customer, create debt, handle approval, record payment, show daily report, and logout.
+The frontend stage is accepted when the app can log in, show dashboard totals, list customers, open a customer profile, create a customer, create debt, handle approval, record payment, show daily report, run data quality scan, and log out.
