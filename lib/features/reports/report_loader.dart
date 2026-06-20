@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/daily_report_model.dart';
-import '../../services/report_reader_service.dart';
+import '../../services/report_daily_service.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/loading_page.dart';
 import 'daily_report_screen.dart';
@@ -9,7 +9,7 @@ import 'daily_report_screen.dart';
 class ReportLoader extends StatefulWidget {
   const ReportLoader({super.key, required this.service});
 
-  final ReportReaderService service;
+  final ReportDailyService service;
 
   @override
   State<ReportLoader> createState() => _ReportLoaderState();
@@ -21,11 +21,11 @@ class _ReportLoaderState extends State<ReportLoader> {
   @override
   void initState() {
     super.initState();
-    future = widget.service.loadToday();
+    future = widget.service.today();
   }
 
   void reload() {
-    setState(() => future = widget.service.loadToday());
+    setState(() => future = widget.service.today());
   }
 
   @override
