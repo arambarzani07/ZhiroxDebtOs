@@ -2,19 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../features/app_shell/app_shell.dart';
 import '../features/dashboard/dashboard_loader.dart';
-import '../features/customers/customer_list_screen.dart';
+import '../features/customers/customer_loader_small.dart';
 import '../features/reports/report_loader.dart';
 import '../features/data_quality/quality_loader.dart';
 import '../features/settings/settings_screen.dart';
-import '../models/customer_model.dart';
 import 'app_services.dart';
 
 class AppHome extends StatefulWidget {
-  const AppHome({
-    super.key,
-    required this.services,
-    required this.onLogout,
-  });
+  const AppHome({super.key, required this.services, required this.onLogout});
 
   final AppServices services;
   final VoidCallback onLogout;
@@ -33,18 +28,10 @@ class _AppHomeState extends State<AppHome> {
       onDestinationSelected: (value) => setState(() => index = value),
       pages: [
         DashboardLoader(service: widget.services.dashboard),
-        CustomerListScreen(
-          customers: const <CustomerModel>[],
-          onRefresh: () {},
-          onCreate: () {},
-          onOpenCustomer: (_) {},
-        ),
+        CustomerLoaderSmall(service: widget.services.customers, onOpen: (_) {}),
         ReportLoader(service: widget.services.reports),
         QualityLoader(service: widget.services.quality),
-        SettingsScreen(
-          apiBaseUrl: 'configured',
-          onLogout: widget.onLogout,
-        ),
+        SettingsScreen(apiBaseUrl: 'configured', onLogout: widget.onLogout),
       ],
     );
   }
