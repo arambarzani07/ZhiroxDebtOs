@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../models/customer_model.dart';
+import '../../models/financial_event_model.dart';
 import '../../widgets/customer_balance_card.dart';
 import '../../widgets/financial_action_bar.dart';
+import '../../widgets/financial_result_panel.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({
@@ -11,6 +13,7 @@ class ProfileScreen extends StatelessWidget {
     required this.profile,
     required this.onDebt,
     required this.onPayment,
+    this.lastResult,
     this.loading = false,
   });
 
@@ -18,6 +21,7 @@ class ProfileScreen extends StatelessWidget {
   final CustomerProfileModel profile;
   final VoidCallback onDebt;
   final VoidCallback onPayment;
+  final FinancialEventResultModel? lastResult;
   final bool loading;
 
   @override
@@ -35,6 +39,10 @@ class ProfileScreen extends StatelessWidget {
           debtHealth: profile.debtHealth,
         ),
         const SizedBox(height: 12),
+        if (lastResult != null) ...[
+          FinancialResultPanel(result: lastResult!),
+          const SizedBox(height: 12),
+        ],
         FinancialActionBar(
           onDebt: onDebt,
           onPayment: onPayment,
