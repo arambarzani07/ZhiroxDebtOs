@@ -12,7 +12,7 @@ All frontend changes are applied directly to `main`. No additional branches are 
 
 ## Current stage
 
-The current stage is API layer separation and UI completion. Existing backend and database logic should not be changed in this stage.
+The current stage is controlled wiring and compile cleanup. Existing backend and database logic should not be changed in this stage.
 
 ## Stage 1 - API connectivity
 
@@ -22,7 +22,7 @@ The current stage is API layer separation and UI completion. Existing backend an
 - Use consistent loading, retry, and error states.
 - Keep API communication inside reusable service classes.
 
-Status: in progress. `ApiClient`, `TokenStorage`, typed response models, customer service, and dashboard service are now present.
+Status: main API connectivity is wired through `AppRoot`, `AppServices`, `ApiClient`, and `TokenStorage`.
 
 ## Stage 2 - Core flow
 
@@ -35,7 +35,7 @@ Status: in progress. `ApiClient`, `TokenStorage`, typed response models, custome
 - Receive payment.
 - Approval confirmation when credit limit is exceeded.
 
-Status: first compact implementation exists in `lib/main.dart`; feature screens are being added gradually.
+Status: login, dashboard, customer list, reports, quality check, settings, and logout now have separated feature files. Customer creation and full profile actions still need final wiring.
 
 ## Stage 3 - Financial protection UX
 
@@ -56,7 +56,7 @@ Status: reusable financial protection widgets are present. Next step is wiring t
 - Data quality scan page.
 - Settings and logout.
 
-Status: dashboard, daily report, data quality, and settings feature screens are present.
+Status: dashboard, daily report, data quality, and settings feature screens are present and connected through loaders.
 
 ## Stage 5 - Production readiness
 
@@ -66,7 +66,7 @@ Status: dashboard, daily report, data quality, and settings feature screens are 
 - Prepare web build configuration.
 - Confirm deployment on Netlify or Cloudflare.
 
-Status: typed response models, reusable widgets, feature screens, and first API services are started.
+Status: `main.dart` now starts the app through `AppRoot`; compile cleanup and final feature wiring are next.
 
 ## Typed models added
 
@@ -79,6 +79,22 @@ Status: typed response models, reusable widgets, feature screens, and first API 
 
 - `lib/services/customer_service.dart`
 - `lib/services/dashboard_service.dart`
+- `lib/services/quality_service.dart`
+- `lib/services/report_reader_service.dart`
+
+## App wiring added
+
+- `lib/app/app_services.dart`
+- `lib/app/app_home.dart`
+- `lib/app/app_root.dart`
+- `lib/main.dart`
+
+## Loaders added
+
+- `lib/features/dashboard/dashboard_loader.dart`
+- `lib/features/customers/customer_loader_small.dart`
+- `lib/features/reports/report_loader.dart`
+- `lib/features/data_quality/quality_loader.dart`
 
 ## Feature screens added
 
