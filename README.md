@@ -2,7 +2,15 @@
 
 Kurdish RTL Flutter frontend foundation for **Zhirox Debt Intelligence OS**.
 
-This frontend is designed for the tested Xano backend/database flow:
+## Work rule
+
+All frontend work is done directly on the `main` branch. No extra branch is used for this project unless the owner explicitly changes this rule.
+
+## Current frontend stage
+
+The project is now in the frontend completion stage based on the tested Xano database and backend. The backend/database should not be redesigned during this stage.
+
+## Tested backend flow
 
 - Auth/Login
 - Manager permissions
@@ -15,60 +23,32 @@ This frontend is designed for the tested Xano backend/database flow:
 - Daily report
 - Data quality scan
 
-## Backend API configuration
-
-The app starts from the Auth API base URL:
-
-```text
-https://x8ki-letl-twmt.n7.xano.io/api:zhirox-auth
-```
-
-Other API group URLs are derived in `lib/main.dart` by replacing `zhirox-auth` with the matching group slug:
-
-```text
-zhirox-customers
-zhirox-financial-events
-zhirox-approvals
-zhirox-dashboard
-zhirox-reports
-zhirox-receipts
-zhirox-data-quality
-```
-
-If any Xano group has a different base URL, update `ApiConfig` in `lib/main.dart`.
-
-## Main endpoints used
-
-```text
-POST /login
-GET  /me
-GET  /list
-GET  /id
-POST /create
-POST /debt
-POST /payment
-POST /approve
-GET  /summary
-GET  /daily
-POST /scan
-```
-
-Because Xano uses separate API groups, each path is called against its own base URL.
-
 ## Run locally
 
 ```bash
 flutter pub get
-flutter run
+flutter create . --platforms=web
+flutter run -d chrome
 ```
 
-Default test login shown in the UI:
+## Build for web
 
-```text
-admin@zhirox.os
-123123123
+```bash
+flutter create . --platforms=web
+flutter pub get
+flutter build web --release
 ```
 
-## Current status
+## Frontend acceptance checklist
 
-This is the first frontend foundation. It contains a single-file Flutter implementation in `lib/main.dart` to make the repo easy to run and test quickly. Later it should be refactored into feature folders after the API paths are fully confirmed from Xano.
+- Login works
+- Dashboard totals load
+- Customer list loads
+- Customer profile opens
+- Customer creation works
+- Debt creation works
+- Approval flow works
+- Payment works
+- Daily report loads
+- Data quality scan passes
+- Logout clears the session
