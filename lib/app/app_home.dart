@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../features/app_shell/app_shell.dart';
 import '../features/dashboard/dashboard_loader.dart';
 import '../features/customers/customer_loader_small.dart';
+import '../features/customers/customer_profile_route.dart';
 import '../features/reports/report_loader.dart';
 import '../features/data_quality/quality_loader.dart';
 import '../features/settings/settings_screen.dart';
@@ -28,7 +29,14 @@ class _AppHomeState extends State<AppHome> {
       onDestinationSelected: (value) => setState(() => index = value),
       pages: [
         DashboardLoader(service: widget.services.dashboard),
-        CustomerLoaderSmall(service: widget.services.customers, onOpen: (_) {}),
+        CustomerLoaderSmall(
+          service: widget.services.customers,
+          onOpen: (customer) => openCustomerProfile(
+            context: context,
+            customer: customer,
+            services: widget.services,
+          ),
+        ),
         ReportLoader(service: widget.services.reports),
         QualityLoader(service: widget.services.quality),
         SettingsScreen(apiBaseUrl: 'configured', onLogout: widget.onLogout),
