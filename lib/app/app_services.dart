@@ -4,7 +4,7 @@ import '../core/storage/token_storage.dart';
 import '../services/customer_service.dart';
 import '../services/dashboard_service.dart';
 import '../services/quality_service.dart';
-import '../services/report_reader_service.dart';
+import '../services/report_daily_service.dart';
 
 class AppServices {
   AppServices._({
@@ -35,7 +35,7 @@ class AppServices {
         client: client,
         baseUrl: ApiEndpoints.quality,
       ),
-      reports: ReportReaderService(
+      reports: ReportDailyService(
         client: client,
         baseUrl: ApiEndpoints.reports,
       ),
@@ -47,5 +47,5 @@ class AppServices {
   final CustomerServiceApi customers;
   final DashboardServiceApi dashboard;
   final QualityServiceApi quality;
-  final ReportReaderService reports;
+  final ReportDailyService reports;
 }
