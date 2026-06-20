@@ -75,6 +75,31 @@ class _ProfileLoaderState extends State<ProfileLoader> {
     }
   }
 
+  Future<void> runApproval({required bool approve}) async {
+    final actions = widget.actions;
+    final requestId = lastResult?.approvalRequestId;
+    if (actions == null || requestId == null) return;
+
+    setState(() => loading = true);
+    try {
+      if (approve) {
+        await actions.approve(requestId);
+      } else {
+        await actions.reject(requestId);
+      }
+      if (!mounted) return;
+      setState(() => lastResult = null);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(approve ? 'ڕەزامەندی درا' : 'داواکاری ڕەتکرایەوە')),
+      );
+      reload();
+    } catch (error) {
+      if (mounted) showErrorSnack(context, error.toString());
+    } finally {
+      if (mounted) setState(() => loading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<CustomerProfileModel>(
@@ -98,6 +123,8 @@ class _ProfileLoaderState extends State<ProfileLoader> {
             onDebt: () => runMoneyAction(debt: true),
             onPayment: () => runMoneyAction(debt: false),
             lastResult: lastResult,
+            onApprove: () => runApproval(approve: true),
+            onReject: () => runApproval(approve: false),
             loading: loading,
           ),
         );
