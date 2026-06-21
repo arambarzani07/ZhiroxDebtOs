@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../../core/utils/response_reader.dart';
 import '../../models/customer_model.dart';
 import '../../models/financial_event_model.dart';
+import '../../models/ledger_entry_model.dart';
 import '../../services/customer_service.dart';
+import '../../services/locked_backend_service.dart';
 import '../../widgets/amount_input_dialog.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/loading_page.dart';
@@ -16,18 +18,27 @@ class ProfileLoader extends StatefulWidget {
     required this.customer,
     required this.service,
     this.actions,
+    this.lockedBackend,
   });
 
   final CustomerModel customer;
   final CustomerServiceApi service;
   final CustomerProfileActions? actions;
+  final LockedBackendService? lockedBackend;
 
   @override
   State<ProfileLoader> createState() => _ProfileLoaderState();
 }
 
+class _ProfileLoadResult {
+  const _ProfileLoadResult({required this.profile, required this.ledger});
+
+  final CustomerProfileModel profile;
+  final List<LedgerEntryModel> ledger;
+}
+
 class _ProfileLoaderState extends State<ProfileLoader> {
-  late Future<CustomerProfileModel> future;
+  late Future<_ProfileLoadResult> future;
   bool loading = false;
   FinancialEventResultModel? lastResult;
 
@@ -37,12 +48,27 @@ class _ProfileLoaderState extends State<ProfileLoader> {
     future = loadProfile();
   }
 
-  Future<CustomerProfileModel> loadProfile() async {
+  Future<_ProfileLoadResult> loadProfile() async {
     final data = await widget.service.rawProfile(widget.customer.id);
     final map = ResponseReader.mapFrom(
       ResponseReader.pick(data, ['profile', 'customer_profile', 'data']) ?? data,
     );
-    return CustomerProfileModel.fromJson(map);
+    final profile = CustomerProfileModel.fromJson(map);
+    final ledger = await loadLedgerSafely();
+    return _ProfileLoadResult(profile: profile, ledger: ledger);
+  }
+
+  Future<List<LedgerEntryModel>> loadLedgerSafely() async {
+    final lockedBackend = widget.lockedBackend;
+    if (lockedBackend == null) return const [];
+    try {
+      final statement = await lockedBackend.customerStatement(widget.customer.id);
+      final map = ResponseReader.mapFrom(statement);
+      final rawLedger = ResponseReader.pick(map, ['ledger', 'items']) ?? const [];
+      return LedgerEntryModel.listFrom(rawLedger);
+    } catch (_) {
+      return const [];
+    }
   }
 
   void reload() {
@@ -102,7 +128,7 @@ class _ProfileLoaderState extends State<ProfileLoader> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<CustomerProfileModel>(
+    return FutureBuilder<_ProfileLoadResult>(
       future: future,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
@@ -111,15 +137,16 @@ class _ProfileLoaderState extends State<ProfileLoader> {
         if (snapshot.hasError) {
           return Scaffold(body: ErrorView(message: snapshot.error.toString(), onRetry: reload));
         }
-        final profile = snapshot.data;
-        if (profile == null) {
+        final result = snapshot.data;
+        if (result == null) {
           return Scaffold(body: ErrorView(message: 'No profile data', onRetry: reload));
         }
         return Scaffold(
           appBar: AppBar(title: Text(widget.customer.fullName)),
           body: ProfileScreen(
             customer: widget.customer,
-            profile: profile,
+            profile: result.profile,
+            ledger: result.ledger,
             onDebt: () => runMoneyAction(debt: true),
             onPayment: () => runMoneyAction(debt: false),
             lastResult: lastResult,
