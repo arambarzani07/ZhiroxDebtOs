@@ -37,7 +37,7 @@ class _AppRootState extends State<AppRoot> {
       final data = await services.apiClient.post(
         ApiEndpoints.base,
         '/login',
-        body: {'email': email, 'password': password, 'role': 'manager'},
+        body: {'email': email, 'password': password},
       );
       final map = ResponseReader.mapFrom(data);
       final token = '${map['authToken'] ?? map['token'] ?? ''}';
@@ -67,10 +67,7 @@ class _AppRootState extends State<AppRoot> {
     return AuthGate(
       tokenFuture: authSession(),
       loginPage: LoginScreen(onSubmit: login, loading: loading),
-      homePage: AppHome(
-        services: services,
-        onLogout: logout,
-      ),
+      homePage: AppHome(services: services, onLogout: logout),
     );
   }
 }
