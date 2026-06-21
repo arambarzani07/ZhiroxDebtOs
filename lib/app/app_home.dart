@@ -38,7 +38,10 @@ class _AppHomeState extends State<AppHome> {
             services: widget.services,
           ),
         ),
-        ReportLoader(service: widget.services.reports),
+        ReportLoader(
+          service: widget.services.reports,
+          lockedBackend: widget.services.lockedBackend,
+        ),
         QualityLoader(service: widget.services.quality),
         SettingsScreen(apiBaseUrl: ApiEndpoints.base, onLogout: widget.onLogout),
       ],
