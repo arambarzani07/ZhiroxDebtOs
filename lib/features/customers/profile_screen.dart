@@ -5,6 +5,7 @@ import '../../models/financial_event_model.dart';
 import '../../models/ledger_entry_model.dart';
 import '../../widgets/customer_balance_card.dart';
 import '../../widgets/customer_ledger_timeline.dart';
+import '../../widgets/customer_profile_tools.dart';
 import '../../widgets/financial_action_bar.dart';
 import '../../widgets/financial_result_panel.dart';
 
@@ -17,8 +18,13 @@ class ProfileScreen extends StatelessWidget {
     required this.onPayment,
     this.ledger = const [],
     this.lastResult,
+    this.toolResult,
     this.onApprove,
     this.onReject,
+    this.onShowReceipts,
+    this.onPaymentReminderDraft,
+    this.onCustomerStatementDraft,
+    this.onExportLedger,
     this.loading = false,
   });
 
@@ -28,8 +34,13 @@ class ProfileScreen extends StatelessWidget {
   final VoidCallback onPayment;
   final List<LedgerEntryModel> ledger;
   final FinancialEventResultModel? lastResult;
+  final Map<String, dynamic>? toolResult;
   final VoidCallback? onApprove;
   final VoidCallback? onReject;
+  final VoidCallback? onShowReceipts;
+  final VoidCallback? onPaymentReminderDraft;
+  final VoidCallback? onCustomerStatementDraft;
+  final VoidCallback? onExportLedger;
   final bool loading;
 
   @override
@@ -60,6 +71,15 @@ class ProfileScreen extends StatelessWidget {
           onDebt: onDebt,
           onPayment: onPayment,
           loading: loading,
+        ),
+        const SizedBox(height: 12),
+        CustomerProfileTools(
+          loading: loading,
+          toolResult: toolResult,
+          onShowReceipts: onShowReceipts,
+          onPaymentReminderDraft: onPaymentReminderDraft,
+          onCustomerStatementDraft: onCustomerStatementDraft,
+          onExportLedger: onExportLedger,
         ),
         const SizedBox(height: 12),
         CustomerLedgerTimeline(entries: ledger),
