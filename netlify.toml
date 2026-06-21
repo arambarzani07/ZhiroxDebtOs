@@ -1,5 +1,5 @@
 [build]
-  command = "flutter config --enable-web && flutter pub get && flutter analyze --no-fatal-infos && flutter build web --release --base-href /"
+  command = "bash scripts/netlify_flutter_build.sh"
   publish = "build/web"
 
 [build.environment]
