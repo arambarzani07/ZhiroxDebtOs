@@ -10,11 +10,17 @@ class DataQualityScreen extends StatelessWidget {
     required this.result,
     required this.loading,
     required this.onScan,
+    this.onFixMissingProfiles,
+    this.onFixReceiptLinks,
+    this.onFixSelectedBalance,
   });
 
   final Map<String, dynamic>? result;
   final bool loading;
   final VoidCallback onScan;
+  final VoidCallback? onFixMissingProfiles;
+  final VoidCallback? onFixReceiptLinks;
+  final ValueChanged<int>? onFixSelectedBalance;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +39,29 @@ class DataQualityScreen extends StatelessWidget {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Icon(Icons.health_and_safety),
-            label: const Text('Scan'),
+            label: const Text('پشکنین'),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              FilledButton.tonalIcon(
+                onPressed: loading ? null : onFixMissingProfiles,
+                icon: const Icon(Icons.person_add_alt_1),
+                label: const Text('چاککردنی profile ـی ونبوو'),
+              ),
+              FilledButton.tonalIcon(
+                onPressed: loading ? null : onFixReceiptLinks,
+                icon: const Icon(Icons.receipt_long),
+                label: const Text('چاککردنی receipt link'),
+              ),
+              FilledButton.tonalIcon(
+                onPressed: loading ? null : () => _askCustomerId(context),
+                icon: const Icon(Icons.account_balance_wallet),
+                label: const Text('چاککردنی باڵانسی کڕیار'),
+              ),
+            ],
           ),
           const SizedBox(height: 16),
           if (data == null)
@@ -55,5 +83,33 @@ class DataQualityScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _askCustomerId(BuildContext context) async {
+    final callback = onFixSelectedBalance;
+    if (callback == null) return;
+    final controller = TextEditingController();
+    final customerId = await showDialog<int>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('ژمارەی کڕیار'),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(labelText: 'Customer ID'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('داخستن'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(int.tryParse(controller.text.trim())),
+            child: const Text('چاککردن'),
+          ),
+        ],
+      ),
+    );
+    if (customerId != null) callback(customerId);
   }
 }
