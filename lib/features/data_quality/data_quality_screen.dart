@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
-import '../../widgets/stat_card.dart';
+import '../../widgets/data_quality_result_panel.dart';
 
 class DataQualityScreen extends StatelessWidget {
   const DataQualityScreen({
@@ -65,21 +63,14 @@ class DataQualityScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           if (data == null)
-            const Text('هێشتا هیچ پشکنینێک نەکراوە')
-          else ...[
-            StatCard(
-              title: 'کێشەکان',
-              value: '${data['issues_found'] ?? 0}',
-              icon: Icons.warning_amber,
-            ),
-            StatCard(
-              title: 'دۆخ',
-              value: data['scan_completed'] == true ? 'تەواو بوو' : 'ناتەواو',
-              icon: Icons.check_circle,
-            ),
-            const SizedBox(height: 12),
-            SelectableText(const JsonEncoder.withIndent('  ').convert(data)),
-          ],
+            const Card(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Text('هێشتا هیچ پشکنینێک نەکراوە'),
+              ),
+            )
+          else
+            DataQualityResultPanel(data: data),
         ],
       ),
     );
