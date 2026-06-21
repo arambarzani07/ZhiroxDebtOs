@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/config/api_endpoints.dart';
+import '../core/utils/response_reader.dart';
 import '../features/auth/auth_gate.dart';
 import '../features/auth/login_screen.dart';
 import '../widgets/error_view.dart';
@@ -18,6 +19,18 @@ class _AppRootState extends State<AppRoot> {
   final services = AppServices();
   bool loading = false;
 
+  Future<String?> authSession() async {
+    final token = await services.storage.readToken();
+    if (token == null || token.isEmpty) return null;
+    try {
+      await services.apiClient.get(ApiEndpoints.base, '/me');
+      return token;
+    } catch (_) {
+      await services.storage.clear();
+      return null;
+    }
+  }
+
   Future<void> login(String email, String password) async {
     setState(() => loading = true);
     try {
@@ -26,14 +39,16 @@ class _AppRootState extends State<AppRoot> {
         '/login',
         body: {'email': email, 'password': password},
       );
-      final map = Map<String, dynamic>.from(data as Map);
+      final map = ResponseReader.mapFrom(data);
       final token = '${map['authToken'] ?? map['token'] ?? ''}';
       if (token.isEmpty) {
         throw Exception('Token نەگەڕایەوە');
       }
       await services.storage.saveToken(token);
+      await services.apiClient.get(ApiEndpoints.base, '/me');
       if (mounted) setState(() {});
     } catch (error) {
+      await services.storage.clear();
       if (mounted) {
         showErrorSnack(context, error.toString());
       }
@@ -50,7 +65,7 @@ class _AppRootState extends State<AppRoot> {
   @override
   Widget build(BuildContext context) {
     return AuthGate(
-      tokenFuture: services.storage.readToken(),
+      tokenFuture: authSession(),
       loginPage: LoginScreen(onSubmit: login, loading: loading),
       homePage: AppHome(
         services: services,
