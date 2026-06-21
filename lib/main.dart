@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'app/app_root.dart';
+import 'core/theme/app_theme.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const ZhiroxDebtApp());
 }
 
@@ -13,11 +15,8 @@ class ZhiroxDebtApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Zhirox Debt Intelligence OS',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.indigo,
-      ),
+      title: 'Zhirox AI Debt',
+      theme: AppTheme.light(),
       builder: (context, child) {
         return Directionality(
           textDirection: TextDirection.rtl,
