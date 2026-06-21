@@ -30,7 +30,7 @@ class CustomerLedgerTimeline extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Statement / Ledger', style: theme.textTheme.titleMedium),
+            Text('دفتر / Statement', style: theme.textTheme.titleMedium),
             const SizedBox(height: 8),
             ...entries.map((entry) => _LedgerTile(entry: entry)),
           ],
@@ -60,7 +60,7 @@ class _LedgerTile extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: theme.colorScheme.surfaceContainerHighest,
+          color: theme.colorScheme.surfaceVariant,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,8 +80,8 @@ class _LedgerTile extends StatelessWidget {
             Text('باڵانسی نوێ: ${AppFormatters.money(entry.newBalance, currency: entry.currency)}'),
             if (entry.note.isNotEmpty) Text('تێبینی: ${entry.note}'),
             if (entry.createdAt.isNotEmpty) Text('کات: ${entry.createdAt}'),
-            if (entry.receiptId != null) Text('Receipt ID: ${entry.receiptId}'),
-            Text('Status: ${entry.status}'),
+            if (entry.receiptId != null) Text('ژمارەی پەسوولە: ${entry.receiptId}'),
+            Text('دۆخ: ${entry.status}'),
           ],
         ),
       ),
