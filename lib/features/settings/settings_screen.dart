@@ -7,6 +7,7 @@ import '../../services/locked_backend_service.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/receipt_verify_panel.dart';
 import '../../widgets/stat_card.dart';
+import '../../widgets/system_actions_panel.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({
@@ -29,6 +30,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Map<String, dynamic> permissions = const {};
   Map<String, dynamic> license = const {};
   Map<String, dynamic>? receiptVerifyResult;
+  Map<String, dynamic>? actionResult;
   bool loading = false;
 
   @override
@@ -76,6 +78,53 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } finally {
       if (mounted) setState(() => loading = false);
     }
+  }
+
+  Future<void> runSystemAction(Future<dynamic> Function(LockedBackendService service) action) async {
+    final lockedBackend = widget.lockedBackend;
+    if (lockedBackend == null) return;
+    setState(() => loading = true);
+    try {
+      final data = ResponseReader.mapFrom(await action(lockedBackend));
+      if (!mounted) return;
+      setState(() => actionResult = data);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('کردارەکە تەواو بوو')));
+    } catch (error) {
+      if (mounted) showErrorSnack(context, error.toString());
+    } finally {
+      if (mounted) setState(() => loading = false);
+    }
+  }
+
+  Future<void> askBroadcastMessage() async {
+    final controller = TextEditingController();
+    final message = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('پەیامی broadcast'),
+        content: TextField(
+          controller: controller,
+          minLines: 3,
+          maxLines: 6,
+          decoration: const InputDecoration(
+            labelText: 'پەیام',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('داخستن'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(controller.text.trim()),
+            child: const Text('Draft'),
+          ),
+        ],
+      ),
+    );
+    if (message == null || message.isEmpty) return;
+    await runSystemAction((service) => service.managerBroadcastDraft(message));
   }
 
   int? _readMarketId(Map<String, dynamic> data) {
@@ -147,6 +196,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               loading: loading,
               result: receiptVerifyResult,
               onVerify: verifyReceipt,
+            ),
+            const SizedBox(height: 12),
+            SystemActionsPanel(
+              loading: loading,
+              result: actionResult,
+              onExportCustomers: () => runSystemAction((service) => service.exportCustomers()),
+              onExportReports: () => runSystemAction((service) => service.exportReports(reportType: 'summary')),
+              onExportReceipts: () => runSystemAction((service) => service.exportReceipts()),
+              onManagerBroadcast: askBroadcastMessage,
             ),
             const SizedBox(height: 12),
             ExpansionTile(
