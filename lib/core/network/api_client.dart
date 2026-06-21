@@ -52,8 +52,8 @@ class ApiClient {
     };
 
     final response = method == 'GET'
-        ? await http.get(uri, headers: headers)
-        : await http.post(uri, headers: headers, body: jsonEncode(body ?? {}));
+        ? await http.get(uri, headers: headers).timeout(const Duration(seconds: 25))
+        : await http.post(uri, headers: headers, body: jsonEncode(body ?? {})).timeout(const Duration(seconds: 25));
 
     dynamic decoded;
     try {
