@@ -38,8 +38,8 @@ class CustomerBalanceCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(phone),
             const Divider(height: 28),
-            StatLine(title: 'Balance', value: currentBalance),
-            StatLine(title: 'Credit limit', value: creditLimit),
+            StatLine(title: 'باڵانس', value: currentBalance),
+            StatLine(title: 'سنوری قەرز', value: creditLimit),
             StatLine(title: 'Trust score', value: trustScore),
             const SizedBox(height: 8),
             Wrap(
