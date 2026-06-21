@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../models/customer_model.dart';
 import '../../models/financial_event_model.dart';
+import '../../models/ledger_entry_model.dart';
 import '../../widgets/customer_balance_card.dart';
+import '../../widgets/customer_ledger_timeline.dart';
 import '../../widgets/financial_action_bar.dart';
 import '../../widgets/financial_result_panel.dart';
 
@@ -13,6 +15,7 @@ class ProfileScreen extends StatelessWidget {
     required this.profile,
     required this.onDebt,
     required this.onPayment,
+    this.ledger = const [],
     this.lastResult,
     this.onApprove,
     this.onReject,
@@ -23,6 +26,7 @@ class ProfileScreen extends StatelessWidget {
   final CustomerProfileModel profile;
   final VoidCallback onDebt;
   final VoidCallback onPayment;
+  final List<LedgerEntryModel> ledger;
   final FinancialEventResultModel? lastResult;
   final VoidCallback? onApprove;
   final VoidCallback? onReject;
@@ -57,6 +61,8 @@ class ProfileScreen extends StatelessWidget {
           onPayment: onPayment,
           loading: loading,
         ),
+        const SizedBox(height: 12),
+        CustomerLedgerTimeline(entries: ledger),
       ],
     );
   }
