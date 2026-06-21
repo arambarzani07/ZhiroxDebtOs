@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../core/utils/formatters.dart';
+
 class RiskBadge extends StatelessWidget {
   const RiskBadge({super.key, required this.riskLevel});
 
@@ -9,7 +11,7 @@ class RiskBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Chip(
       avatar: const Icon(Icons.shield, size: 18),
-      label: Text(riskLevel.isEmpty ? 'low' : riskLevel),
+      label: Text('مەترسی: ${AppFormatters.riskLabel(riskLevel)}'),
     );
   }
 }
@@ -23,7 +25,7 @@ class DebtHealthBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Chip(
       avatar: const Icon(Icons.favorite, size: 18),
-      label: Text(health.isEmpty ? 'healthy' : health),
+      label: Text('دۆخی قەرز: ${AppFormatters.debtHealthLabel(health)}'),
     );
   }
 }
