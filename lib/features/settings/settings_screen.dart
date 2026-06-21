@@ -6,7 +6,7 @@ import '../../core/utils/response_reader.dart';
 import '../../services/locked_backend_service.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/receipt_verify_panel.dart';
-import '../../widgets/stat_card.dart';
+import '../../widgets/settings_overview_panel.dart';
 import '../../widgets/system_actions_panel.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -134,14 +134,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return int.tryParse('$value');
   }
 
-  String _pickText(Map<String, dynamic> data, List<String> keys, {String fallback = '—'}) {
-    for (final key in keys) {
-      final value = ResponseReader.pick(data, [key]);
-      if (value != null && '$value'.trim().isNotEmpty) return '$value';
-    }
-    return fallback;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -171,25 +163,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SelectableText(widget.apiBaseUrl),
           const SizedBox(height: 16),
           if (widget.lockedBackend != null) ...[
-            StatCard(
-              title: 'دراوی بنەڕەتی',
-              value: _pickText(marketSettings, ['default_currency', 'currency'], fallback: 'IQD'),
-              icon: Icons.payments,
-            ),
-            StatCard(
-              title: 'Timezone',
-              value: _pickText(marketSettings, ['timezone'], fallback: 'Asia/Baghdad'),
-              icon: Icons.schedule,
-            ),
-            StatCard(
-              title: 'License',
-              value: _pickText(license, ['status', 'license_status', 'plan_status'], fallback: 'trial'),
-              icon: Icons.verified_user,
-            ),
-            StatCard(
-              title: 'Permissions',
-              value: _pickText(permissions, ['role', 'user_role'], fallback: 'loaded'),
-              icon: Icons.admin_panel_settings,
+            SettingsOverviewPanel(
+              settings: marketSettings,
+              permissions: permissions,
+              license: license,
             ),
             const SizedBox(height: 12),
             ReceiptVerifyPanel(
