@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../core/utils/response_reader.dart';
 import '../../services/locked_backend_service.dart';
 import '../../widgets/error_view.dart';
+import '../../widgets/receipt_verify_panel.dart';
 import '../../widgets/stat_card.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -27,6 +28,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Map<String, dynamic> marketSettings = const {};
   Map<String, dynamic> permissions = const {};
   Map<String, dynamic> license = const {};
+  Map<String, dynamic>? receiptVerifyResult;
   bool loading = false;
 
   @override
@@ -53,6 +55,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
         permissions = permissionsData;
         license = licenseData;
       });
+    } catch (error) {
+      if (mounted) showErrorSnack(context, error.toString());
+    } finally {
+      if (mounted) setState(() => loading = false);
+    }
+  }
+
+  Future<void> verifyReceipt(String token) async {
+    final lockedBackend = widget.lockedBackend;
+    if (lockedBackend == null) return;
+    setState(() => loading = true);
+    try {
+      final data = ResponseReader.mapFrom(await lockedBackend.receiptVerify(token));
+      if (!mounted) return;
+      setState(() => receiptVerifyResult = data);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('پەسوولە پشکنرا')));
     } catch (error) {
       if (mounted) showErrorSnack(context, error.toString());
     } finally {
@@ -123,6 +141,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: 'Permissions',
               value: _pickText(permissions, ['role', 'user_role'], fallback: 'loaded'),
               icon: Icons.admin_panel_settings,
+            ),
+            const SizedBox(height: 12),
+            ReceiptVerifyPanel(
+              loading: loading,
+              result: receiptVerifyResult,
+              onVerify: verifyReceipt,
             ),
             const SizedBox(height: 12),
             ExpansionTile(
