@@ -41,6 +41,7 @@ class _ProfileLoaderState extends State<ProfileLoader> {
   late Future<_ProfileLoadResult> future;
   bool loading = false;
   FinancialEventResultModel? lastResult;
+  Map<String, dynamic>? toolResult;
 
   @override
   void initState() {
@@ -73,6 +74,29 @@ class _ProfileLoaderState extends State<ProfileLoader> {
 
   void reload() {
     setState(() => future = loadProfile());
+  }
+
+  Map<String, dynamic> normalizeToolResult(dynamic response, String key) {
+    final map = ResponseReader.mapFrom(response);
+    if (map.isNotEmpty) return map;
+    final list = ResponseReader.listFrom(response);
+    return {key: list};
+  }
+
+  Future<void> runTool({required Future<dynamic> Function(LockedBackendService service) action, required String key}) async {
+    final lockedBackend = widget.lockedBackend;
+    if (lockedBackend == null) return;
+    setState(() => loading = true);
+    try {
+      final response = await action(lockedBackend);
+      if (!mounted) return;
+      setState(() => toolResult = normalizeToolResult(response, key));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('کردارەکە تەواو بوو')));
+    } catch (error) {
+      if (mounted) showErrorSnack(context, error.toString());
+    } finally {
+      if (mounted) setState(() => loading = false);
+    }
   }
 
   Future<void> runMoneyAction({required bool debt}) async {
@@ -147,11 +171,36 @@ class _ProfileLoaderState extends State<ProfileLoader> {
             customer: widget.customer,
             profile: result.profile,
             ledger: result.ledger,
+            toolResult: toolResult,
             onDebt: () => runMoneyAction(debt: true),
             onPayment: () => runMoneyAction(debt: false),
             lastResult: lastResult,
             onApprove: () => runApproval(approve: true),
             onReject: () => runApproval(approve: false),
+            onShowReceipts: widget.lockedBackend == null
+                ? null
+                : () => runTool(
+                      key: 'receipts',
+                      action: (service) => service.receiptsByCustomer(widget.customer.id),
+                    ),
+            onPaymentReminderDraft: widget.lockedBackend == null
+                ? null
+                : () => runTool(
+                      key: 'whatsapp_draft',
+                      action: (service) => service.paymentReminderDraft(widget.customer.id),
+                    ),
+            onCustomerStatementDraft: widget.lockedBackend == null
+                ? null
+                : () => runTool(
+                      key: 'whatsapp_draft',
+                      action: (service) => service.customerStatementDraft(widget.customer.id),
+                    ),
+            onExportLedger: widget.lockedBackend == null
+                ? null
+                : () => runTool(
+                      key: 'export_job',
+                      action: (service) => service.exportLedger(customerId: widget.customer.id),
+                    ),
             loading: loading,
           ),
         );
