@@ -37,7 +37,7 @@ class _AppRootState extends State<AppRoot> {
       final data = await services.apiClient.post(
         ApiEndpoints.base,
         '/login',
-        body: {'email': email, 'password': password},
+        body: {'email': email, 'password': password, 'role': 'admin'},
       );
       final map = ResponseReader.mapFrom(data);
       final token = '${map['authToken'] ?? map['token'] ?? ''}';
