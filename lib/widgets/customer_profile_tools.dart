@@ -1,6 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+
+import 'tool_result_panel.dart';
 
 class CustomerProfileTools extends StatelessWidget {
   const CustomerProfileTools({
@@ -60,9 +60,7 @@ class CustomerProfileTools extends StatelessWidget {
             if (result != null) ...[
               const SizedBox(height: 12),
               const Divider(),
-              Text('ئەنجامی کردار', style: Theme.of(context).textTheme.titleSmall),
-              const SizedBox(height: 8),
-              SelectableText(const JsonEncoder.withIndent('  ').convert(result)),
+              ToolResultPanel(result: result),
             ],
           ],
         ),
