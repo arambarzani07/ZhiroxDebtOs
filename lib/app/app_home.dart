@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../core/config/api_endpoints.dart';
 import '../features/app_shell/app_shell.dart';
 import '../features/dashboard/dashboard_loader.dart';
 import '../features/customers/customer_loader_small.dart';
@@ -39,7 +40,7 @@ class _AppHomeState extends State<AppHome> {
         ),
         ReportLoader(service: widget.services.reports),
         QualityLoader(service: widget.services.quality),
-        SettingsScreen(apiBaseUrl: 'configured', onLogout: widget.onLogout),
+        SettingsScreen(apiBaseUrl: ApiEndpoints.base, onLogout: widget.onLogout),
       ],
     );
   }
