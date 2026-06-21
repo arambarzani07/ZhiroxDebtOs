@@ -3,6 +3,7 @@ import '../core/network/api_client.dart';
 import '../core/storage/token_storage.dart';
 import '../services/customer_service.dart';
 import '../services/dashboard_service.dart';
+import '../services/locked_backend_service.dart';
 import '../services/quality_service.dart';
 import '../services/report_daily_service.dart';
 
@@ -14,6 +15,7 @@ class AppServices {
     required this.dashboard,
     required this.quality,
     required this.reports,
+    required this.lockedBackend,
   });
 
   factory AppServices() {
@@ -39,6 +41,7 @@ class AppServices {
         client: client,
         baseUrl: ApiEndpoints.reports,
       ),
+      lockedBackend: LockedBackendService(client: client),
     );
   }
 
@@ -48,4 +51,5 @@ class AppServices {
   final DashboardServiceApi dashboard;
   final QualityServiceApi quality;
   final ReportDailyService reports;
+  final LockedBackendService lockedBackend;
 }
