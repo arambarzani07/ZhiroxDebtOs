@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'app/app_root.dart';
-import 'core/theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +15,11 @@ class ZhiroxDebtApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Zhirox AI Debt',
-      theme: AppTheme.light(),
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Colors.indigo,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
       builder: (context, child) {
         return Directionality(
           textDirection: TextDirection.rtl,
