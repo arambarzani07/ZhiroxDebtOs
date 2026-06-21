@@ -72,7 +72,7 @@ class _CustomerLoaderSmallState extends State<CustomerLoaderSmall> {
         return CustomerListScreen(
           customers: snapshot.data ?? const <CustomerModel>[],
           onRefresh: reload,
-          onCreate: creating ? null : createCustomer,
+          onCreate: createCustomer,
           onOpenCustomer: widget.onOpen,
         );
       },
