@@ -17,6 +17,7 @@ void openCustomerProfile({
       builder: (_) => ProfileLoader(
         customer: customer,
         service: services.customers,
+        lockedBackend: services.lockedBackend,
         actions: CustomerProfileActions(
           money: flows.money,
           approvals: flows.approvals,
