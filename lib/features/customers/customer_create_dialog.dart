@@ -13,6 +13,8 @@ class CustomerCreateInput {
 
   Map<String, dynamic> toJson() {
     return {
+      'market_id': 0,
+      'branch_id': 0,
       'full_name': fullName,
       'name': fullName,
       'phone': phone,
