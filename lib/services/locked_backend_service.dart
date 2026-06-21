@@ -226,6 +226,14 @@ class LockedBackendService {
     );
   }
 
+  Future<dynamic> managerBroadcastDraft(String message, {int? marketId, int? branchId}) {
+    return client.post(
+      ApiEndpoints.whatsapp,
+      '/manager-broadcast-draft',
+      body: _clean({'message': message, 'market_id': marketId, 'branch_id': branchId}),
+    );
+  }
+
   Future<dynamic> marketSettings({int? marketId, int? branchId}) {
     return client.get(
       ApiEndpoints.settings,
@@ -262,6 +270,46 @@ class LockedBackendService {
     return client.post(
       ApiEndpoints.exports,
       '/ledger',
+      body: _clean({
+        'customer_id': customerId,
+        'start_date': startDate,
+        'end_date': endDate,
+      }),
+    );
+  }
+
+  Future<dynamic> exportReports({String? reportType, String? startDate, String? endDate}) {
+    return client.post(
+      ApiEndpoints.exports,
+      '/reports',
+      body: _clean({
+        'report_type': reportType,
+        'start_date': startDate,
+        'end_date': endDate,
+      }),
+    );
+  }
+
+  Future<dynamic> exportAuditLogs({String? startDate, String? endDate}) {
+    return client.post(
+      ApiEndpoints.exports,
+      '/audit-logs',
+      body: _clean({'start_date': startDate, 'end_date': endDate}),
+    );
+  }
+
+  Future<dynamic> exportCustomerStatement(int customerId) {
+    return client.post(
+      ApiEndpoints.exports,
+      '/customer-statement',
+      body: {'customer_id': customerId},
+    );
+  }
+
+  Future<dynamic> exportReceipts({int? customerId, String? startDate, String? endDate}) {
+    return client.post(
+      ApiEndpoints.exports,
+      '/receipts',
       body: _clean({
         'customer_id': customerId,
         'start_date': startDate,
