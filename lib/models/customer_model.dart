@@ -17,14 +17,25 @@ class CustomerModel {
     String readText(List<String> keys, {String fallback = ''}) {
       for (final key in keys) {
         final value = '${json[key] ?? ''}'.trim();
-        if (value.isNotEmpty) return value;
+        if (value.isNotEmpty && value != 'null') return value;
       }
       return fallback;
     }
 
+    int readInt(List<String> keys) {
+      for (final key in keys) {
+        final value = json[key];
+        if (value is int) return value;
+        if (value is num) return value.toInt();
+        final parsed = num.tryParse('${value ?? ''}');
+        if (parsed != null) return parsed.toInt();
+      }
+      return 0;
+    }
+
     return CustomerModel(
-      id: int.tryParse('${json['id']}') ?? 0,
-      fullName: readText(['full_name', 'name', 'customer_name']),
+      id: readInt(['id', 'customer_id', 'customers_id']),
+      fullName: readText(['full_name', 'name', 'customer_name', 'display_name']),
       phone: readText(['phone', 'mobile', 'phone_number']),
       address: readText(['address', 'location']),
       status: readText(['status'], fallback: 'active'),
@@ -63,7 +74,7 @@ class CustomerProfileModel {
     String readText(List<String> keys, {String fallback = ''}) {
       for (final key in keys) {
         final value = '${json[key] ?? ''}'.trim();
-        if (value.isNotEmpty) return value;
+        if (value.isNotEmpty && value != 'null') return value;
       }
       return fallback;
     }
