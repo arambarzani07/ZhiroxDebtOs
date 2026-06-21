@@ -13,7 +13,15 @@ class CustomerServiceApi {
     final map = ResponseReader.mapFrom(data);
     final raw = data is List
         ? data
-        : ResponseReader.pick(map, ['customers', 'items', 'data']) ?? const [];
+        : ResponseReader.pick(map, [
+              'customers',
+              'items',
+              'data',
+              'records',
+              'rows',
+              'list',
+            ]) ??
+            const [];
     return ResponseReader.listFrom(raw).map(CustomerModel.fromJson).toList();
   }
 
